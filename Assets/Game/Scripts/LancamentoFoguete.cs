@@ -19,6 +19,7 @@ public class LancamentoFoguete : MonoBehaviour
     private bool subindo = true; // Indica se o foguete está subindo ou caindo
     private float velocidadeAtual;
     private float tempoInicioLancamento;
+    private float altitude = 0f; // Altura máxima alcançada pelo foguete
 
     private void Update()
     {
@@ -39,13 +40,20 @@ public class LancamentoFoguete : MonoBehaviour
 
         if (lancamentoRealizado)
         {
+            // Registra a altura máxima alcançada
+            altitude = transform.position.y;
             // Mostrar a mensagem da velocidade atual
-            Debug.Log("Tempo: " + tempoDecorrido + " segundos | Velocidade Atual: " + velocidadeAtual);
+            Debug.Log("Tempo: " + tempoDecorrido + " segundos | Velocidade Atual: " + velocidadeAtual + " km/h | " + "Altitude: " + altitude + " metros");
 
             // Verifica se a aceleração terminou e inverte a direção
             if (tempoDecorrido >= duracaoAceleracao)
             {
                 subindo = false;
+            }
+
+            // Verifica se a velocidade vertical é menor que 0 (foguete parou de subir e está caindo)
+            if (fogueteRigidbody.velocity.y < 0)
+            {
             }
         }
     }
