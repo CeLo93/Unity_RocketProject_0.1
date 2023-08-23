@@ -14,6 +14,7 @@ public class LancamentoFoguete : MonoBehaviour
 
     private bool lancamentoRealizado = false;
     private bool mensagemMostrada = false;
+    private float distanciaPercorrida = 0f; // Distância percorrida durante a aceleração
     private float velocidadeAtual;
     private float tempoInicioLancamento;
 
@@ -27,7 +28,7 @@ public class LancamentoFoguete : MonoBehaviour
         }
 
         // Mostrar a mensagem de velocidade atual após o lançamento ser iniciado
-        if (lancamentoRealizado && !mensagemMostrada)
+        if (lancamentoRealizado)
         {
             mensagemMostrada = true;
             Debug.Log("Lançamento iniciado! Velocidade Atual: " + velocidadeAtual);
@@ -41,6 +42,9 @@ public class LancamentoFoguete : MonoBehaviour
         {
             // Calcular a força baseada na velocidade inicial e no aumento de velocidade
             velocidadeAtual = velocidadeInicial + aumentoVelocidade * (Time.time - tempoInicioLancamento);
+
+            // Calcular a distância percorrida durante a aceleração
+            distanciaPercorrida = (velocidadeInicial * (Time.time - tempoInicioLancamento)) + (0.5f * aumentoVelocidade * Mathf.Pow((Time.time - tempoInicioLancamento), 2));
 
             // Aplicar a força no eixo local Y usando ForceMode.Acceleration
             fogueteRigidbody.AddForce(transform.up * velocidadeAtual, ForceMode.Acceleration);
