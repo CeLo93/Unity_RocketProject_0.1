@@ -12,9 +12,11 @@ public class LancamentoFoguete : MonoBehaviour
     [SerializeField] private float atrasoInicioLancamento = 3f; // Atraso para iniciar o lançamento após pressionar "L"
     [SerializeField] private float duracaoAceleracao = 5f; // Duração da aceleração em segundos
 
+    [Header("Collision")]
+    [SerializeField] private string groundTag = "Ground"; // Tag do objeto de chão
+
     private bool lancamentoRealizado = false;
-    private bool mensagemMostrada = false;
-    private float distanciaPercorrida = 0f; // Distância percorrida durante a aceleração
+    private bool subindo = true; // Indica se o foguete está subindo ou caindo
     private float velocidadeAtual;
     private float tempoInicioLancamento;
 
@@ -27,11 +29,24 @@ public class LancamentoFoguete : MonoBehaviour
             tempoInicioLancamento = Time.time + atrasoInicioLancamento;
         }
 
-        // Mostrar a mensagem de velocidade atual após o lançamento ser iniciado
+        // Calcular o tempo decorrido desde o início do lançamento
+        float tempoDecorrido = Time.time - tempoInicioLancamento;
+
+        // Calcula a velocidade atual considerando a direção (subindo ou caindo). Obs.: Operadores ternários
+        velocidadeAtual = subindo
+            ? velocidadeInicial + aumentoVelocidade * tempoDecorrido
+            : velocidadeInicial - aumentoVelocidade * (tempoDecorrido - duracaoAceleracao);
+
         if (lancamentoRealizado)
         {
-            mensagemMostrada = true;
-            Debug.Log("Lançamento iniciado! Velocidade Atual: " + velocidadeAtual);
+            // Mostrar a mensagem da velocidade atual
+            Debug.Log("Tempo: " + tempoDecorrido + " segundos | Velocidade Atual: " + velocidadeAtual);
+
+            // Verifica se a aceleração terminou e inverte a direção
+            if (tempoDecorrido >= duracaoAceleracao)
+            {
+                subindo = false;
+            }
         }
     }
 
@@ -40,14 +55,20 @@ public class LancamentoFoguete : MonoBehaviour
         // Se o lançamento foi iniciado após o atraso, aplicar a força no eixo local Y
         if (lancamentoRealizado && Time.time >= tempoInicioLancamento && Time.time - tempoInicioLancamento <= duracaoAceleracao)
         {
-            // Calcular a força baseada na velocidade inicial e no aumento de velocidade
-            velocidadeAtual = velocidadeInicial + aumentoVelocidade * (Time.time - tempoInicioLancamento);
-
-            // Calcular a distância percorrida durante a aceleração
-            distanciaPercorrida = (velocidadeInicial * (Time.time - tempoInicioLancamento)) + (0.5f * aumentoVelocidade * Mathf.Pow((Time.time - tempoInicioLancamento), 2));
-
             // Aplicar a força no eixo local Y usando ForceMode.Acceleration
             fogueteRigidbody.AddForce(transform.up * velocidadeAtual, ForceMode.Acceleration);
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        // Verificar se a colisão foi com o objeto de chão (tag "Ground")
+        if (collision.gameObject.CompareTag(groundTag))
+        {
+            // Parar a aceleração e desativar o foguete
+            lancamentoRealizado = false;
+            fogueteRigidbody.velocity = Vector3.zero; // Parar a velocidade
+            gameObject.SetActive(false); // Desativar o foguete
         }
     }
 }

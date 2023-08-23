@@ -3050,7 +3050,7 @@ GameObject:
   - component: {fileID: 483986044}
   m_Layer: 0
   m_Name: Water
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4796,7 +4796,7 @@ GameObject:
   - component: {fileID: 1295115207}
   m_Layer: 0
   m_Name: Terrain
-  m_TagString: Untagged
+  m_TagString: Ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647
@@ -6610,9 +6610,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fogueteRigidbody: {fileID: 3440788926565465623}
   velocidadeInicial: 0
-  aumentoVelocidade: 10
+  aumentoVelocidade: 9
   atrasoInicioLancamento: 0
-  duracaoAceleracao: 5
+  duracaoAceleracao: 10.8
+  groundTag: Ground
 --- !u!136 &7469827329064062961
 CapsuleCollider:
   m_ObjectHideFlags: 0
