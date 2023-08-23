@@ -10,8 +10,10 @@ public class LancamentoFoguete : MonoBehaviour
 
     [SerializeField] private float aumentoVelocidade = 2f; // Aumento de velocidade por segundo
     [SerializeField] private float atrasoInicioLancamento = 3f; // Atraso para iniciar o lançamento após pressionar "L"
+    [SerializeField] private float duracaoAceleracao = 5f; // Duração da aceleração em segundos
 
     private bool lancamentoRealizado = false;
+    private bool mensagemMostrada = false;
     private float velocidadeAtual;
     private float tempoInicioLancamento;
 
@@ -23,21 +25,25 @@ public class LancamentoFoguete : MonoBehaviour
             lancamentoRealizado = true;
             tempoInicioLancamento = Time.time + atrasoInicioLancamento;
         }
+
+        // Mostrar a mensagem de velocidade atual após o lançamento ser iniciado
+        if (lancamentoRealizado && !mensagemMostrada)
+        {
+            mensagemMostrada = true;
+            Debug.Log("Lançamento iniciado! Velocidade Atual: " + velocidadeAtual);
+        }
     }
 
     private void FixedUpdate()
     {
-        // Se o lançamento foi iniciado após o atraso, aplicar a força apenas no eixo Y
-        if (lancamentoRealizado && Time.time >= tempoInicioLancamento)
+        // Se o lançamento foi iniciado após o atraso, aplicar a força no eixo local Y
+        if (lancamentoRealizado && Time.time >= tempoInicioLancamento && Time.time - tempoInicioLancamento <= duracaoAceleracao)
         {
             // Calcular a força baseada na velocidade inicial e no aumento de velocidade
             velocidadeAtual = velocidadeInicial + aumentoVelocidade * (Time.time - tempoInicioLancamento);
 
-            // Aplicar a força no eixo Y usando ForceMode.Acceleration
-            fogueteRigidbody.AddForce(Vector3.up * velocidadeAtual, ForceMode.Acceleration);
-
-            // Mostrar a mensagem de velocidade atual
-            Debug.Log("Lançamento iniciado! Velocidade Atual: " + velocidadeAtual);
+            // Aplicar a força no eixo local Y usando ForceMode.Acceleration
+            fogueteRigidbody.AddForce(transform.up * velocidadeAtual, ForceMode.Acceleration);
         }
     }
 }
