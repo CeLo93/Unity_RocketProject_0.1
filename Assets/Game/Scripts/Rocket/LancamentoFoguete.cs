@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class LancamentoFoguete : MonoBehaviour
 {
@@ -6,8 +7,9 @@ public class LancamentoFoguete : MonoBehaviour
     [SerializeField] private Rigidbody fogueteRigidbody;
 
     public Animator animatorParaquedas;
-
     [SerializeField] private GameObject baseFoguete;
+    public ParticleSystem particulaFaseDois; // Referência ao componente ParticleSystem
+    public ParticleSystem particulaCruzeiro; // Referência à nova partícula a ser ativada
 
     [Header("Settings")]
     [SerializeField] private float velocidadeInicial = 10f;
@@ -30,7 +32,7 @@ public class LancamentoFoguete : MonoBehaviour
     {
         fogueteRigidbody = GetComponent<Rigidbody>();
     }
-
+    
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.L) && !lancamentoRealizado)
@@ -56,13 +58,52 @@ public class LancamentoFoguete : MonoBehaviour
                 subindo = false;
             }
 
+            //Fase Dois-----
             if (altitude >= alturaFaseDois)
             {
                 velocidadeAtual *= 2;
                 baseFoguete.SetActive(true);
+
+                // Ativar o sistema de partículas
+                if (particulaFaseDois != null)
+                {
+                    particulaFaseDois.Play();
+
+                    // Definir a duração da partícula
+                    float duracaoParticula = 1.0f; // Duração desejada em segundos
+                    StartCoroutine(DesativarParticulaAposDuracao(particulaFaseDois, duracaoParticula));
+
+                    // Iniciar a corrotina para ativar a nova partícula após a pausa da particulaFaseDois
+                    StartCoroutine(AtivarParticulaAposPausa(particulaFaseDois, particulaCruzeiro));
+                }
             }
+            //Fase Dois-----
         }
     }
+    private IEnumerator AtivarParticulaAposPausa(ParticleSystem particleSystem, ParticleSystem newParticleSystem)
+    {
+        // Esperar até que a partícula atual seja pausada
+        while (particleSystem.isPlaying)
+        {
+            yield return null;
+        }
+
+        // Ativar a nova partícula
+        newParticleSystem.Play();
+    }
+    // Corrotinas-----
+    private IEnumerator DesativarParticulaAposDuracao(ParticleSystem particleSystem, float duracao)
+    {
+        yield return new WaitForSeconds(duracao);
+
+        // Parar a partícula e desativar o sistema de partículas
+        particleSystem.Stop();
+        particleSystem.gameObject.SetActive(false);
+    }
+
+
+
+    // Corrotinas-----
 
     private void FixedUpdate()
     {
