@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class Detonador : MonoBehaviour
 {
+    public GameObject FogueteRef;
+
     [Header("Collision")]
     [SerializeField] private string groundTag = "Ground";
 
@@ -9,7 +11,7 @@ public class Detonador : MonoBehaviour
     {
         if (other.CompareTag(groundTag))
         {
-            gameObject.SetActive(false);
+            FogueteRef.SetActive(false);
         }
     }
 }
