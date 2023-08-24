@@ -8,6 +8,7 @@ public class LancamentoFoguete : MonoBehaviour
     [Header("Settings")]
     [SerializeField] private float velocidadeInicial = 10f; // Velocidade inicial acima da gravidade
 
+    [SerializeField] private float alturaFaseDois;
     [SerializeField] private float aumentoVelocidade = 2f; // Aumento de velocidade por segundo
     [SerializeField] private float atrasoInicioLancamento = 3f; // Atraso para iniciar o lançamento após pressionar "L"
     [SerializeField] private float duracaoAceleracao = 5f; // Duração da aceleração em segundos
@@ -42,6 +43,7 @@ public class LancamentoFoguete : MonoBehaviour
         {
             // Registra a altura máxima alcançada
             altitude = transform.position.y;
+
             // Mostrar a mensagem da velocidade atual
             Debug.Log("Tempo: " + tempoDecorrido + " segundos | Velocidade Atual: " + velocidadeAtual + " km/h | " + "Altitude: " + altitude + " metros");
 
@@ -51,9 +53,10 @@ public class LancamentoFoguete : MonoBehaviour
                 subindo = false;
             }
 
-            // Verifica se a velocidade vertical é menor que 0 (foguete parou de subir e está caindo)
-            if (fogueteRigidbody.velocity.y < 0)
+            // Dobrar a velocidade do foguete ao chegar na altura de 50 metros
+            if (altitude >= alturaFaseDois)
             {
+                velocidadeAtual *= 5;
             }
         }
     }
@@ -68,10 +71,10 @@ public class LancamentoFoguete : MonoBehaviour
         }
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
         // Verificar se a colisão foi com o objeto de chão (tag "Ground")
-        if (collision.gameObject.CompareTag(groundTag))
+        if (other.CompareTag(groundTag))
         {
             // Parar a aceleração e desativar o foguete
             lancamentoRealizado = false;
