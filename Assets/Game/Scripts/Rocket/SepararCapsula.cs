@@ -73,7 +73,7 @@ public class SepararCapsula : MonoBehaviour
     {
         capsulaRigidbody.isKinematic = false;
 
-        capsulaRigidbody.AddForce(new Vector3(1, 10, 0) * ejectionForce, ForceMode.Impulse);
+        capsulaRigidbody.AddForce(new Vector3(Random.value, Random.value, Random.value) * ejectionForce, ForceMode.Impulse);
         separacaoAtivada = true;
         capsulaEjetada = true;
 

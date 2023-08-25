@@ -12,6 +12,7 @@ public class LancamentoFoguete : MonoBehaviour
     public GameObject baseFoguete;
     public ParticleSystem particulaFaseDois; // Referência ao componente ParticleSystem
     public ParticleSystem particulaCruzeiro; // Referência à nova partícula a ser ativada
+    public PauseMenu pauseMenu; // Adicione essa linha
 
     [Header("AudioSource")]
     public AudioSource soundSourceLauncher; // Referência ao componente AudioSource
@@ -29,6 +30,7 @@ public class LancamentoFoguete : MonoBehaviour
     [SerializeField] private float duracaoAceleracao = 5f;
     [SerializeField] private float rotationSmoothing = 1.0f; // Ajuste a velocidade da suavização da estabilização de rotação
     private bool activeSource3 = false;
+    private bool isPaused = false;
 
     [Header("Collision")]
     private string groundTag = "Ground";
@@ -50,6 +52,11 @@ public class LancamentoFoguete : MonoBehaviour
 
     private void Update()
     {
+        // Verificar se a tecla "Escape" foi pressionada
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            PauseGame(); // Chamar função para pausar o jogo
+        }
         if (Input.GetKeyDown(KeyCode.L) && !lancamentoRealizado)
         {
             soundSourceGround.Stop(); // Reduzir o volume pela metade
@@ -194,5 +201,23 @@ public class LancamentoFoguete : MonoBehaviour
         }
 
         transform.rotation = targetRotation; // Garantir que as rotações X, Y e Z sejam exatamente zero no final
+    }
+    private void PauseGame()
+    {
+        // Pausar ou despausar o jogo
+        if (Time.timeScale == 0f)
+        {
+            Time.timeScale = 1f; // Despausar o jogo
+            // Esconder o menu de pausa
+            pauseMenu.pauseMenuUI.SetActive(false);
+        }
+        else
+        {
+            Time.timeScale = 0f; // Pausar o jogo
+            // Exibir o menu de pausa
+            pauseMenu.pauseMenuUI.SetActive(true);
+        }
+
+        isPaused = !isPaused; // Inverter o estado de pausa
     }
 }
