@@ -18,6 +18,7 @@ public class LancamentoFoguete : MonoBehaviour
 
     public AudioSource soundSource2; // Segundo componente AudioSource
     public AudioSource soundSource3; // Segundo componente AudioSource
+    public AudioSource soundSourceGround; // Segundo componente AudioSource
 
     [Header("Settings")]
     [SerializeField] private float velocidadeInicial = 10f;
@@ -51,6 +52,8 @@ public class LancamentoFoguete : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.L) && !lancamentoRealizado)
         {
+            soundSourceGround.Stop(); // Reduzir o volume pela metade
+
             lancamentoRealizado = true;
             tempoInicioLancamento = Time.time + atrasoInicioLancamento;
 
@@ -166,6 +169,14 @@ public class LancamentoFoguete : MonoBehaviour
 
             // Suavizar as rotações X, Y e Z para zero
             StartCoroutine(SmoothResetRotations());
+
+            if (soundSourceGround != null)
+            {
+                soundSourceGround.Play(); // Ativar a partícula do cruzeiro quando o lançamento é realizado
+                soundSourceLauncher.volume = 0.1f; // Reduzir o volume pela metade
+
+                soundSourceGround.volume = 0.1f; // Reduzir o volume pela metade
+            }
         }
     }
 

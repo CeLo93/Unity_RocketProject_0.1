@@ -43,7 +43,7 @@ public class SepararCapsula : MonoBehaviour
                 animatorParaquedas.SetBool("parachuteFly", true);
 
                 // Pausar o soundSourceLauncher e tocar um novo áudio
-                lancamentoFoguete.SoundSourceLauncherAndPlayNewAudio(0.2f);
+                lancamentoFoguete.SoundSourceLauncherAndPlayNewAudio(0.4f);
                 if (soundSource4 != null)
                 {
                     soundSource4.Play(); // Ativar a partícula do cruzeiro quando o lançamento é realizado
