@@ -16,7 +16,7 @@ public class PauseMenu : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (isPaused)
+            if (!isPaused)
             {
                 ResumeGame();
             }

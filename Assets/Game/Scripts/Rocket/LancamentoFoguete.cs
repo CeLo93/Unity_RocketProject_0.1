@@ -218,6 +218,5 @@ public class LancamentoFoguete : MonoBehaviour
             pauseMenu.pauseMenuUI.SetActive(true);
         }
 
-        isPaused = !isPaused; // Inverter o estado de pausa
     }
 }
