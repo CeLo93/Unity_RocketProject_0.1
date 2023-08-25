@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class SepararCapsula : MonoBehaviour
 {
@@ -21,6 +22,7 @@ public class SepararCapsula : MonoBehaviour
         }
     }
 
+    //-----------------------EJECT CAPSULE--v
     public void EjectCapsula()
     {
         if (!separacaoAtivada && transform.position.y < ejectionHeight && fogueteRigidbody.velocity.y < -10f)
@@ -37,8 +39,14 @@ public class SepararCapsula : MonoBehaviour
     {
         capsulaRigidbody.isKinematic = false;
 
-        capsulaRigidbody.AddForce(new Vector3(1, 1, 0) * ejectionForce, ForceMode.Impulse);
+        capsulaRigidbody.AddForce(new Vector3(1, 10, 0) * ejectionForce, ForceMode.Impulse);
         separacaoAtivada = true;
         capsulaEjetada = true;
+
+        // Zerar a rotação do foguete e fixá-la em 0
+        fogueteRigidbody.rotation = Quaternion.Euler(0f, 0f, 0f);
+
+        // Congelar todas as rotações do foguete
+        fogueteRigidbody.freezeRotation = true;
     }
 }

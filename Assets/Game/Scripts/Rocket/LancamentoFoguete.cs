@@ -18,6 +18,7 @@ public class LancamentoFoguete : MonoBehaviour
     [SerializeField] private float aumentoVelocidade = 2f;
     [SerializeField] private float atrasoInicioLancamento = 3f;
     [SerializeField] private float duracaoAceleracao = 5f;
+    [SerializeField] private float rotationSmoothing = 1.0f; // Ajuste a velocidade da suavização da estabilização de rotação
 
     [Header("Collision")]
     [SerializeField] private string groundTag = "Ground";
@@ -28,17 +29,22 @@ public class LancamentoFoguete : MonoBehaviour
     private float tempoInicioLancamento;
     private float altitude = 0f;
 
+    //----------------------------------------------------VARIAVEIS
     private void Start()
     {
         fogueteRigidbody = GetComponent<Rigidbody>();
     }
-    
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.L) && !lancamentoRealizado)
         {
             lancamentoRealizado = true;
             tempoInicioLancamento = Time.time + atrasoInicioLancamento;
+            if (particulaCruzeiro != null)
+            {
+                particulaCruzeiro.Play(); // Ativar a partícula do cruzeiro quando o lançamento é realizado
+            }
         }
 
         float tempoDecorrido = Time.time - tempoInicioLancamento;
@@ -70,7 +76,7 @@ public class LancamentoFoguete : MonoBehaviour
                     particulaFaseDois.Play();
 
                     // Definir a duração da partícula
-                    float duracaoParticula = 1.0f; // Duração desejada em segundos
+                    float duracaoParticula = 4.0f; // Duração desejada em segundos
                     StartCoroutine(DesativarParticulaAposDuracao(particulaFaseDois, duracaoParticula));
 
                     // Iniciar a corrotina para ativar a nova partícula após a pausa da particulaFaseDois
@@ -80,6 +86,7 @@ public class LancamentoFoguete : MonoBehaviour
             //Fase Dois-----
         }
     }
+
     private IEnumerator AtivarParticulaAposPausa(ParticleSystem particleSystem, ParticleSystem newParticleSystem)
     {
         // Esperar até que a partícula atual seja pausada
@@ -91,6 +98,7 @@ public class LancamentoFoguete : MonoBehaviour
         // Ativar a nova partícula
         newParticleSystem.Play();
     }
+
     // Corrotinas-----
     private IEnumerator DesativarParticulaAposDuracao(ParticleSystem particleSystem, float duracao)
     {
@@ -100,8 +108,6 @@ public class LancamentoFoguete : MonoBehaviour
         particleSystem.Stop();
         particleSystem.gameObject.SetActive(false);
     }
-
-
 
     // Corrotinas-----
 
@@ -123,6 +129,25 @@ public class LancamentoFoguete : MonoBehaviour
 
             lancamentoRealizado = false;
             fogueteRigidbody.velocity = Vector3.zero;
+
+            // Suavizar as rotações X, Y e Z para zero
+            StartCoroutine(SmoothResetRotations());
         }
+    }
+
+    private IEnumerator SmoothResetRotations()
+    {
+        Quaternion startRotation = transform.rotation;
+        Quaternion targetRotation = Quaternion.Euler(0f, 0f, 0f); // Rotações X, Y e Z são zeradas
+        float elapsedTime = 0.0f;
+
+        while (elapsedTime < rotationSmoothing)
+        {
+            transform.rotation = Quaternion.Slerp(startRotation, targetRotation, elapsedTime / rotationSmoothing);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        transform.rotation = targetRotation; // Garantir que as rotações X, Y e Z sejam exatamente zero no final
     }
 }
