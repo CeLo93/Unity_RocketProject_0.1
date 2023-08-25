@@ -13,7 +13,8 @@ public class SepararCapsula : MonoBehaviour
 
     private bool separacaoAtivada = false;
     private bool capsulaEjetada = false;
-    [SerializeField] private float rotationSmoothing = 1.0f; // Ajuste a velocidade da suavização
+    [SerializeField] private float rotationSmoothing = 1.0f; // Ajuste a velocidade da suavização. Em termos mais técnicos, rotationSmoothing define quanto tempo (em segundos)
+                                                             // a corrotina leva para completar a transição da rotação atual para a rotação zerada.
 
     private void Update()
     {

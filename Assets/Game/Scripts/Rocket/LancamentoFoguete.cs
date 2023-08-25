@@ -10,6 +10,9 @@ public class LancamentoFoguete : MonoBehaviour
     public GameObject baseFoguete;
     public ParticleSystem particulaFaseDois; // Referência ao componente ParticleSystem
     public ParticleSystem particulaCruzeiro; // Referência à nova partícula a ser ativada
+    public AudioSource soundSourceLauncher; // Referência ao componente AudioSource
+    public AudioSource soundSource2; // Segundo componente AudioSource
+    public AudioSource soundSource3; // Segundo componente AudioSource
 
     [Header("Settings")]
     [SerializeField] private float velocidadeInicial = 10f;
@@ -19,6 +22,7 @@ public class LancamentoFoguete : MonoBehaviour
     [SerializeField] private float atrasoInicioLancamento = 3f;
     [SerializeField] private float duracaoAceleracao = 5f;
     [SerializeField] private float rotationSmoothing = 1.0f; // Ajuste a velocidade da suavização da estabilização de rotação
+    private bool activeSource3 = false;
 
     [Header("Collision")]
     private string groundTag = "Ground";
@@ -33,6 +37,9 @@ public class LancamentoFoguete : MonoBehaviour
     private void Start()
     {
         //fogueteRigidbody = GetComponent<Rigidbody>();
+        //soundSourceLauncher = GetComponent<AudioSource>();
+        //soundSource2 = transform.GetChild(0).GetComponent<AudioSource>(); // Configura o segundo AudioSource (exemplo, pode variar dependendo da hierarquia)
+        activeSource3 = true;
     }
 
     private void Update()
@@ -41,9 +48,19 @@ public class LancamentoFoguete : MonoBehaviour
         {
             lancamentoRealizado = true;
             tempoInicioLancamento = Time.time + atrasoInicioLancamento;
+
             if (particulaCruzeiro != null)
             {
                 particulaCruzeiro.Play(); // Ativar a partícula do cruzeiro quando o lançamento é realizado
+            }
+
+            if (soundSourceLauncher != null)
+            {
+                soundSourceLauncher.Play(); // Iniciar a reprodução do som em loop
+            }
+            if (soundSource2 != null)
+            {
+                soundSource2.Play(); // Iniciar a reprodução do segundo som
             }
         }
 
@@ -76,16 +93,21 @@ public class LancamentoFoguete : MonoBehaviour
                     particulaFaseDois.Play();
 
                     // Definir a duração da partícula
-                    float duracaoParticula = 4.0f; // Duração desejada em segundos
+                    float duracaoParticula = 9.0f; // Duração desejada em segundos
                     StartCoroutine(DesativarParticulaAposDuracao(particulaFaseDois, duracaoParticula));
 
                     // Iniciar a corrotina para ativar a nova partícula após a pausa da particulaFaseDois
                     StartCoroutine(AtivarParticulaAposPausa(particulaFaseDois, particulaCruzeiro));
                 }
+                if (soundSource2 != null && activeSource3 == true)
+                {
+                    soundSource3.Play(); // Iniciar a reprodução do segundo som
+                    activeSource3 = false;
+                }
             }
             //Fase Dois-----
         }
-    }
+    }//------UPDATE()
 
     private IEnumerator AtivarParticulaAposPausa(ParticleSystem particleSystem, ParticleSystem newParticleSystem)
     {
