@@ -1,5 +1,7 @@
 using UnityEngine;
 using System.Collections;
+using System;
+using UnityEditor;
 
 public class LancamentoFoguete : MonoBehaviour
 {
@@ -10,7 +12,10 @@ public class LancamentoFoguete : MonoBehaviour
     public GameObject baseFoguete;
     public ParticleSystem particulaFaseDois; // Referência ao componente ParticleSystem
     public ParticleSystem particulaCruzeiro; // Referência à nova partícula a ser ativada
+
+    [Header("AudioSource")]
     public AudioSource soundSourceLauncher; // Referência ao componente AudioSource
+
     public AudioSource soundSource2; // Segundo componente AudioSource
     public AudioSource soundSource3; // Segundo componente AudioSource
 
@@ -36,9 +41,9 @@ public class LancamentoFoguete : MonoBehaviour
     //----------------------------------------------------VARIAVEIS
     private void Start()
     {
-        //fogueteRigidbody = GetComponent<Rigidbody>();
-        //soundSourceLauncher = GetComponent<AudioSource>();
-        //soundSource2 = transform.GetChild(0).GetComponent<AudioSource>(); // Configura o segundo AudioSource (exemplo, pode variar dependendo da hierarquia)
+        fogueteRigidbody = GetComponent<Rigidbody>();
+        soundSourceLauncher = GetComponent<AudioSource>();
+        //soundSource2 = GetComponent<AudioSource>();
         activeSource3 = true;
     }
 
@@ -53,14 +58,13 @@ public class LancamentoFoguete : MonoBehaviour
             {
                 particulaCruzeiro.Play(); // Ativar a partícula do cruzeiro quando o lançamento é realizado
             }
-
-            if (soundSourceLauncher != null)
-            {
-                soundSourceLauncher.Play(); // Iniciar a reprodução do som em loop
-            }
             if (soundSource2 != null)
             {
                 soundSource2.Play(); // Iniciar a reprodução do segundo som
+            }
+            if (soundSourceLauncher != null)
+            {
+                soundSourceLauncher.Play(); // Iniciar a reprodução do som em loop
             }
         }
 
@@ -99,7 +103,7 @@ public class LancamentoFoguete : MonoBehaviour
                     // Iniciar a corrotina para ativar a nova partícula após a pausa da particulaFaseDois
                     StartCoroutine(AtivarParticulaAposPausa(particulaFaseDois, particulaCruzeiro));
                 }
-                if (soundSource2 != null && activeSource3 == true)
+                if (soundSource3 != null && activeSource3 == true)
                 {
                     soundSource3.Play(); // Iniciar a reprodução do segundo som
                     activeSource3 = false;
@@ -108,6 +112,14 @@ public class LancamentoFoguete : MonoBehaviour
             //Fase Dois-----
         }
     }//------UPDATE()
+
+    public void SoundSourceLauncherAndPlayNewAudio(float volume)
+    {
+        if (soundSourceLauncher != null)
+        {
+            soundSourceLauncher.volume = volume; // Reduzir o volume pela metade
+        }
+    }
 
     private IEnumerator AtivarParticulaAposPausa(ParticleSystem particleSystem, ParticleSystem newParticleSystem)
     {

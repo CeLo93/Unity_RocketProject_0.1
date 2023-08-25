@@ -13,8 +13,13 @@ public class SepararCapsula : MonoBehaviour
 
     private bool separacaoAtivada = false;
     private bool capsulaEjetada = false;
-    [SerializeField] private float rotationSmoothing = 1.0f; // Ajuste a velocidade da suavização. Em termos mais técnicos, rotationSmoothing define quanto tempo (em segundos)
-                                                             // a corrotina leva para completar a transição da rotação atual para a rotação zerada.
+    public LancamentoFoguete lancamentoFoguete;
+    public AudioSource soundSource4; // Segundo componente AudioSource
+
+    [Header("Setting")]
+    [SerializeField] private float rotationSmoothing = 1.0f; // Ajusta a velocidade da suavização. Em termos mais técnicos, rotationSmoothing define quanto tempo (em segundos)
+
+    // a corrotina leva para completar a transição da rotação atual para a rotação zerada.
 
     private void Update()
     {
@@ -34,8 +39,15 @@ public class SepararCapsula : MonoBehaviour
                 AtivarSeparacao();
                 paraquedasRef.SetActive(true);
 
-                fogueteRigidbody.drag = 1.0f;
+                fogueteRigidbody.drag = 0.8f;
                 animatorParaquedas.SetBool("parachuteFly", true);
+
+                // Pausar o soundSourceLauncher e tocar um novo áudio
+                lancamentoFoguete.SoundSourceLauncherAndPlayNewAudio(0.2f);
+                if (soundSource4 != null)
+                {
+                    soundSource4.Play(); // Ativar a partícula do cruzeiro quando o lançamento é realizado
+                }
             }
         }
     }
