@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class SepararCapsula : MonoBehaviour
 {
@@ -8,10 +9,17 @@ public class SepararCapsula : MonoBehaviour
     public Animator animatorParaquedas;
 
     public float ejectionForce = 10.0f;
-    public float ejectionHeight = 100.0f;
+    public float ejectionHeight;
 
     private bool separacaoAtivada = false;
     private bool capsulaEjetada = false;
+    public LancamentoFoguete lancamentoFoguete;
+    public AudioSource soundSource4; // Segundo componente AudioSource
+
+    [Header("Setting")]
+    [SerializeField] private float rotationSmoothing = 1.0f; // Ajusta a velocidade da suavização. Em termos mais técnicos, rotationSmoothing define quanto tempo (em segundos)
+
+    // a corrotina leva para completar a transição da rotação atual para a rotação zerada.
 
     private void Update()
     {
@@ -21,24 +29,54 @@ public class SepararCapsula : MonoBehaviour
         }
     }
 
+    //-----------------------EJECT CAPSULE--v
     public void EjectCapsula()
     {
-        if (!separacaoAtivada && transform.position.y < ejectionHeight && fogueteRigidbody.velocity.y < -10f)
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            AtivarSeparacao();
-            paraquedasRef.SetActive(true);
+            if (!separacaoAtivada && transform.position.y < ejectionHeight && fogueteRigidbody.velocity.y < -1f)
+            {
+                AtivarSeparacao();
+                paraquedasRef.SetActive(true);
 
-            fogueteRigidbody.drag = 1.0f;
-            animatorParaquedas.SetBool("parachuteFly", true);
+                fogueteRigidbody.drag = 0.8f;
+                animatorParaquedas.SetBool("parachuteFly", true);
+
+                // Pausar o soundSourceLauncher e tocar um novo áudio
+                lancamentoFoguete.SoundSourceLauncherAndPlayNewAudio(0.2f);
+                if (soundSource4 != null)
+                {
+                    soundSource4.Play(); // Ativar a partícula do cruzeiro quando o lançamento é realizado
+                }
+            }
         }
+    }
+
+    private IEnumerator SmoothStabilizeRotation()
+    {
+        Quaternion startRotation = fogueteRigidbody.rotation;
+        Quaternion targetRotation = Quaternion.Euler(0f, 0f, 0f);
+        float elapsedTime = 0.0f;
+
+        while (elapsedTime < rotationSmoothing)
+        {
+            fogueteRigidbody.rotation = Quaternion.Slerp(startRotation, targetRotation, elapsedTime / rotationSmoothing);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        fogueteRigidbody.rotation = targetRotation; // Garantir que as rotações X, Y e Z sejam exatamente zero no final
+        fogueteRigidbody.freezeRotation = true; // Congelar as rotações para evitar qualquer movimento adicional
     }
 
     private void AtivarSeparacao()
     {
         capsulaRigidbody.isKinematic = false;
 
-        capsulaRigidbody.AddForce(new Vector3(1, 1, 0) * ejectionForce, ForceMode.Impulse);
+        capsulaRigidbody.AddForce(new Vector3(1, 10, 0) * ejectionForce, ForceMode.Impulse);
         separacaoAtivada = true;
         capsulaEjetada = true;
+
+        StartCoroutine(SmoothStabilizeRotation()); // Iniciar a corrotina para suavizar a rotação
     }
 }
