@@ -4,10 +4,10 @@ using System.Collections;
 public class LancamentoFoguete : MonoBehaviour
 {
     [Header("Componentes")]
-    [SerializeField] private Rigidbody fogueteRigidbody;
+    public Rigidbody fogueteRigidbody;
 
     public Animator animatorParaquedas;
-    [SerializeField] private GameObject baseFoguete;
+    public GameObject baseFoguete;
     public ParticleSystem particulaFaseDois; // Referência ao componente ParticleSystem
     public ParticleSystem particulaCruzeiro; // Referência à nova partícula a ser ativada
 
@@ -21,7 +21,7 @@ public class LancamentoFoguete : MonoBehaviour
     [SerializeField] private float rotationSmoothing = 1.0f; // Ajuste a velocidade da suavização da estabilização de rotação
 
     [Header("Collision")]
-    [SerializeField] private string groundTag = "Ground";
+    private string groundTag = "Ground";
 
     private bool lancamentoRealizado = false;
     private bool subindo = true;
@@ -32,7 +32,7 @@ public class LancamentoFoguete : MonoBehaviour
     //----------------------------------------------------VARIAVEIS
     private void Start()
     {
-        fogueteRigidbody = GetComponent<Rigidbody>();
+        //fogueteRigidbody = GetComponent<Rigidbody>();
     }
 
     private void Update()

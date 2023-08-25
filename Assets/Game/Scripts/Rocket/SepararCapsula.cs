@@ -9,10 +9,11 @@ public class SepararCapsula : MonoBehaviour
     public Animator animatorParaquedas;
 
     public float ejectionForce = 10.0f;
-    public float ejectionHeight = 100.0f;
+    public float ejectionHeight;
 
     private bool separacaoAtivada = false;
     private bool capsulaEjetada = false;
+    [SerializeField] private float rotationSmoothing = 1.0f; // Ajuste a velocidade da suavização
 
     private void Update()
     {
@@ -25,14 +26,34 @@ public class SepararCapsula : MonoBehaviour
     //-----------------------EJECT CAPSULE--v
     public void EjectCapsula()
     {
-        if (!separacaoAtivada && transform.position.y < ejectionHeight && fogueteRigidbody.velocity.y < -10f)
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            AtivarSeparacao();
-            paraquedasRef.SetActive(true);
+            if (!separacaoAtivada && transform.position.y < ejectionHeight && fogueteRigidbody.velocity.y < -1f)
+            {
+                AtivarSeparacao();
+                paraquedasRef.SetActive(true);
 
-            fogueteRigidbody.drag = 1.0f;
-            animatorParaquedas.SetBool("parachuteFly", true);
+                fogueteRigidbody.drag = 1.0f;
+                animatorParaquedas.SetBool("parachuteFly", true);
+            }
         }
+    }
+
+    private IEnumerator SmoothStabilizeRotation()
+    {
+        Quaternion startRotation = fogueteRigidbody.rotation;
+        Quaternion targetRotation = Quaternion.Euler(0f, 0f, 0f);
+        float elapsedTime = 0.0f;
+
+        while (elapsedTime < rotationSmoothing)
+        {
+            fogueteRigidbody.rotation = Quaternion.Slerp(startRotation, targetRotation, elapsedTime / rotationSmoothing);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        fogueteRigidbody.rotation = targetRotation; // Garantir que as rotações X, Y e Z sejam exatamente zero no final
+        fogueteRigidbody.freezeRotation = true; // Congelar as rotações para evitar qualquer movimento adicional
     }
 
     private void AtivarSeparacao()
@@ -43,10 +64,6 @@ public class SepararCapsula : MonoBehaviour
         separacaoAtivada = true;
         capsulaEjetada = true;
 
-        // Zerar a rotação do foguete e fixá-la em 0
-        fogueteRigidbody.rotation = Quaternion.Euler(0f, 0f, 0f);
-
-        // Congelar todas as rotações do foguete
-        fogueteRigidbody.freezeRotation = true;
+        StartCoroutine(SmoothStabilizeRotation()); // Iniciar a corrotina para suavizar a rotação
     }
 }
