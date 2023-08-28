@@ -5,7 +5,7 @@
 
 
 ## Descrição
-Este é um projeto de jogo onde você pode lançar um foguete ao espaço, controlar seu voo e realizar um pouso suave usando um paraquedas. O projeto foi desenvolvido com a integração de mecânicas de física, animações, UI e interações de jogador.
+Este é um projeto onde você pode lançar um foguete balístico e realizar um pouso suave usando um paraquedas. O projeto foi desenvolvido com a integração de mecânicas de física, animações, UI e interações de jogador.
 ### Build do jogo Para download: 
 ⬇️ https://drive.google.com/drive/folders/18TPLccDGmquMrLklhXVIvCcrcn4mv4xb?usp=sharing
 
