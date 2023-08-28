@@ -14,18 +14,41 @@ public class SepararCapsula : MonoBehaviour
     private bool separacaoAtivada = false;
     private bool capsulaEjetada = false;
     public LancamentoFoguete lancamentoFoguete;
-    public AudioSource soundSource4; // Segundo componente AudioSource
+    public AudioSource soundSource4;
 
     [Header("Setting")]
-    [SerializeField] private float rotationSmoothing = 1.0f; // Ajusta a velocidade da suavização. Em termos mais técnicos, rotationSmoothing define quanto tempo (em segundos)
+    [SerializeField] private float rotationSmoothing = 1.0f; // Ajusta a velocidade da suavização.
 
-    // a corrotina leva para completar a transição da rotação atual para a rotação zerada.
+    // interpolação linear drag--v
+    private bool increasingDrag = false;
+
+    private float dragStartTime;
+    private float dragStartValue;
+    private float dragTargetValue = 1.0f;
+    private float dragDuration = 17.0f; // Tempo para atingir o drag máximo
+    // interpolação linear drag--^
 
     private void Update()
     {
         if (!capsulaEjetada)
         {
             EjectCapsula();
+        }
+        // Se estamos aumentando o drag...
+        if (increasingDrag)
+        {
+            float elapsedTime = Time.time - dragStartTime;
+            float t = Mathf.Clamp01(elapsedTime / dragDuration); // Normalizar o tempo
+
+            // Interpolar linearmente entre o valor inicial e o valor alvo do drag
+            float newDrag = Mathf.Lerp(dragStartValue, dragTargetValue, t);
+            fogueteRigidbody.drag = newDrag;
+
+            // Verificar se atingimos o valor alvo do drag
+            if (t >= 1.0f)
+            {
+                increasingDrag = false;
+            }
         }
     }
 
@@ -39,14 +62,16 @@ public class SepararCapsula : MonoBehaviour
                 AtivarSeparacao();
                 paraquedasRef.SetActive(true);
 
-                fogueteRigidbody.drag = 0.8f;
+                dragStartTime = Time.time;
+                dragStartValue = fogueteRigidbody.drag;
+                increasingDrag = true;
+
                 animatorParaquedas.SetBool("parachuteFly", true);
 
-                // Pausar o soundSourceLauncher e tocar um novo áudio
                 lancamentoFoguete.SoundSourceLauncherAndPlayNewAudio(0.4f);
                 if (soundSource4 != null)
                 {
-                    soundSource4.Play(); // Ativar a partícula do cruzeiro quando o lançamento é realizado
+                    soundSource4.Play();
                 }
             }
         }

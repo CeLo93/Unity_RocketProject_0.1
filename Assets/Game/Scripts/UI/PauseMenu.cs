@@ -7,6 +7,7 @@ public class PauseMenu : MonoBehaviour
     public LancamentoFoguete lancamentoFoguete; // Referência ao script do lançamento
 
     private bool isPaused = false;
+
     private void Start()
     {
         pauseMenuUI.SetActive(false); // Desativar o menu de pausa no início do jogo
@@ -44,6 +45,11 @@ public class PauseMenu : MonoBehaviour
     public void RestartGame()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-        Time.timeScale = 1f; // Certificar-se de que o jogo não está pausado após reiniciar a cena
+        Time.timeScale = 1f; // Certificar que o jogo não está pausado após reiniciar a cena
+    }
+
+    public void ExitGame()
+    {
+        Application.Quit(); // Fechar o jogo
     }
 }
