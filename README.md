@@ -29,10 +29,11 @@ https://github.com/CeLo93/Unity_ChatGPT_em_Unity/assets/92175791/27bf710a-c90d-4
 - **Pausa e Menu:** Pressione "Esc" para pausar o jogo a qualquer momento e acessar um menu com opções para retomar o jogo, reiniciar ou sair.
 
 ## Desafios e Conquistas
-- **Drag Gradativo ao Abrir o Paraquedas:** Implementou-se um efeito de "drag" gradativo ao abrir o paraquedas, reduzindo a velocidade de descida de forma realista.
-- **Animação Dinâmica do Paraquedas:** Criou-se uma animação dinâmica para o paraquedas, que se ajusta de acordo com a velocidade do foguete e a altitude.
-- **UI com Elementos de Start, Retomar e Exit:** Implementou-se uma interface de usuário (UI) com botões para iniciar o jogo, retomar após a pausa e sair do jogo.
-- **Hierarquia Organizada do Projeto:** Organizou-se a hierarquia do projeto de forma a manter uma estrutura clara e legível.
+- **Drag Gradativo ao Abrir o Paraquedas:** Efeito de "drag" gradativo ao abrir o paraquedas, reduzindo a velocidade de descida de forma realista.
+- **Animação Dinâmica do Paraquedas:** Animação dinâmica para o paraquedas, que se ajusta de acordo com a velocidade do foguete e a altitude.
+- **Sistema de partículas:** Sistema de partículas dinâmica para cada estado do foguete.
+- **UI com Elementos de Start, Retomar e Exit:** Interface de usuário (UI) com botões para iniciar o jogo, retomar após a pausa e sair do jogo.
+- **Hierarquia Organizada do Projeto:** Hierarquia do projeto de forma a manter uma estrutura clara e legível.
 
 ## Instruções
 1. Pressione a tecla "L" para iniciar o lançamento do foguete e sentir o impulso inicial.
