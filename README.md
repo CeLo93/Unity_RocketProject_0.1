@@ -13,6 +13,8 @@ Este é um projeto de jogo onde você pode lançar um foguete ao espaço, contro
 ### Build do jogo Para download: 
 ⬇️ https://drive.google.com/drive/folders/18TPLccDGmquMrLklhXVIvCcrcn4mv4xb?usp=sharing
 
+https://github.com/CeLo93/Unity_ChatGPT_em_Unity/assets/92175791/27bf710a-c90d-4acb-89cb-7f5931124856
+
 <div align="center">
  🎬 Video 01 - GamePlay
 </div>
@@ -74,8 +76,6 @@ Contribuições são bem-vindas! Se você quiser colaborar com o projeto, sinta-
 Este projeto está licenciado sob a [Licença MIT](https://opensource.org/licenses/MIT).
 
 ## Autor
-Meu Nome
+Marcelo Brito De Morais
 
 ---
-
-Sinta-se à vontade para personalizar este modelo de README com informações específicas do seu projeto, adicionar links, capturas de tela e outros elementos relevantes. Parabéns por concluir o projeto!
