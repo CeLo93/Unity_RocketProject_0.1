@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System;
 using UnityEditor;
+using TMPro;
 
 public class LancamentoFoguete : MonoBehaviour
 {
@@ -10,14 +11,18 @@ public class LancamentoFoguete : MonoBehaviour
 
     public Animator animatorParaquedas;
     public GameObject baseFoguete;
+
     public ParticleSystem particulaFaseDois; // Referência ao componente ParticleSystem
     public ParticleSystem particulaCruzeiro; // Referência à nova partícula a ser ativada
+
+    public PauseMenu pauseMenu;
 
     [Header("AudioSource")]
     public AudioSource soundSourceLauncher; // Referência ao componente AudioSource
 
     public AudioSource soundSource2; // Segundo componente AudioSource
-    public AudioSource soundSource3; // Segundo componente AudioSource
+    public AudioSource soundSource3; // Terceiro componente AudioSource
+    public AudioSource soundSourceGround; // Quarto componente AudioSource
 
     [Header("Settings")]
     [SerializeField] private float velocidadeInicial = 10f;
@@ -26,8 +31,10 @@ public class LancamentoFoguete : MonoBehaviour
     [SerializeField] private float aumentoVelocidade = 2f;
     [SerializeField] private float atrasoInicioLancamento = 3f;
     [SerializeField] private float duracaoAceleracao = 5f;
-    [SerializeField] private float rotationSmoothing = 1.0f; // Ajuste a velocidade da suavização da estabilização de rotação
+    [SerializeField] private float rotationSmoothing = 1.0f; // Ajuste da velocidade de suavização da estabilização de rotação
+
     private bool activeSource3 = false;
+    //private bool isPaused = false;
 
     [Header("Collision")]
     private string groundTag = "Ground";
@@ -37,6 +44,12 @@ public class LancamentoFoguete : MonoBehaviour
     private float velocidadeAtual;
     private float tempoInicioLancamento;
     private float altitude = 0f;
+
+    [Header("UI Text Elements")]
+    public TextMeshProUGUI tempoTextMesh;
+
+    public TextMeshProUGUI velocidadeTextMesh;
+    public TextMeshProUGUI altitudeTextMesh;
 
     //----------------------------------------------------VARIAVEIS
     private void Start()
@@ -49,8 +62,15 @@ public class LancamentoFoguete : MonoBehaviour
 
     private void Update()
     {
+        // Verificar se a tecla "Escape" foi pressionada
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            PauseGame(); // Chamar função para pausar o jogo
+        }
         if (Input.GetKeyDown(KeyCode.L) && !lancamentoRealizado)
         {
+            soundSourceGround.Stop(); // Reduzir o volume pela metade
+
             lancamentoRealizado = true;
             tempoInicioLancamento = Time.time + atrasoInicioLancamento;
 
@@ -78,7 +98,12 @@ public class LancamentoFoguete : MonoBehaviour
         {
             altitude = transform.position.y;
 
-            Debug.Log("Tempo: " + tempoDecorrido + " segundos | Velocidade Atual: " + velocidadeAtual + " km/h | " + "Altitude: " + altitude + " metros");
+            // Atualizar os textos do TextMeshPro Text
+            tempoTextMesh.text = "Tempo: " + tempoDecorrido + " segundos";
+            velocidadeTextMesh.text = "Velocidade Atual: " + velocidadeAtual + " km/h";
+            altitudeTextMesh.text = "Altitude: " + altitude + " metros";
+
+            //Debug.Log("Tempo: " + tempoDecorrido + " segundos | Velocidade Atual: " + velocidadeAtual + " km/h | " + "Altitude: " + altitude + " metros");
 
             if (tempoDecorrido >= duracaoAceleracao)
             {
@@ -164,8 +189,16 @@ public class LancamentoFoguete : MonoBehaviour
             lancamentoRealizado = false;
             fogueteRigidbody.velocity = Vector3.zero;
 
-            // Suavizar as rotações X, Y e Z para zero
+            // Suavizar as rotações X, Y e Z para zero para garantir que o foguete se estabilize
             StartCoroutine(SmoothResetRotations());
+
+            if (soundSourceGround != null)
+            {
+                soundSourceGround.Play(); // Ativar a partícula do cruzeiro quando o lançamento é realizado
+                soundSourceLauncher.volume = 0.1f; // Reduzir o volume
+
+                soundSourceGround.volume = 0.1f; // Reduzir o volume
+            }
         }
     }
 
@@ -183,5 +216,22 @@ public class LancamentoFoguete : MonoBehaviour
         }
 
         transform.rotation = targetRotation; // Garantir que as rotações X, Y e Z sejam exatamente zero no final
+    }
+
+    private void PauseGame()
+    {
+        // Pausar ou despausar o jogo
+        if (Time.timeScale == 0f)
+        {
+            Time.timeScale = 1f; // Despausar o jogo
+            // Esconder o menu de pausa
+            pauseMenu.pauseMenuUI.SetActive(false);
+        }
+        else
+        {
+            Time.timeScale = 0f; // Pausar o jogo
+            // Exibir o menu de pausa
+            pauseMenu.pauseMenuUI.SetActive(true);
+        }
     }
 }
