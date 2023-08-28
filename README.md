@@ -1,7 +1,7 @@
 
 # Lançamento de Foguete Balístico
 
-<<img align='left' src='https://github.com/CeLo93/Unity_RocketProject_0.1/assets/92175791/41c317d3-1e78-4d4f-95a9-151e3b2eb55a.gif' width="100">
+<img align='left' src='https://github.com/CeLo93/Unity_RocketProject_0.1/assets/92175791/41c317d3-1e78-4d4f-95a9-151e3b2eb55a.gif' width="100">
 
 
 ## Descrição
