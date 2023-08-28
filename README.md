@@ -1,12 +1,8 @@
 
-
-
 # Lançamento de Foguete Balístico
 
+<<img align='left' src='https://github.com/CeLo93/Unity_RocketProject_0.1/assets/92175791/41c317d3-1e78-4d4f-95a9-151e3b2eb55a.gif' width="100">
 
-
-
-<img align='left' src='https://github.com/CeLo93/Unity_RocketProject_0.1/assets/92175791/53c5912d-6948-4959-b4b4-3aed69783af2.gif' width="100"> 
 
 ## Descrição
 Este é um projeto de jogo onde você pode lançar um foguete ao espaço, controlar seu voo e realizar um pouso suave usando um paraquedas. O projeto foi desenvolvido com a integração de mecânicas de física, animações, UI e interações de jogador.
