@@ -17,7 +17,6 @@ https://github.com/CeLo93/Unity_ChatGPT_em_Unity/assets/92175791/27bf710a-c90d-4
 
 ---------------------
 
-
 ## Mecânicas Principais
 - **Lançamento do foguete:** Pressione "L" para iniciar o lançamento do foguete. Ele ganha velocidade e altitude gradualmente.
 - **Fase de Cruzeiro:** Após atingir uma certa altitude, o foguete entra na fase de cruzeiro, onde sua velocidade é aumentada.
